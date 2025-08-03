@@ -3,6 +3,7 @@ package com.hugodev.user_login.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,8 @@ public class UserService {
 
 	@Autowired
     private UserRepository repo;
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
     
 	@Transactional(readOnly = true)
 	public UserResponseDTO findById(Long id) {
@@ -32,12 +35,18 @@ public class UserService {
 	}
 	@Transactional
 	public UserResponseDTO insert(UserRequestDTO dto) {
-		User user = new User();
-		user.setEmail(dto.getEmail());
-		user.setName(dto.getName());
-		user.setPassword(dto.getPassword());
-		repo.save(user);
-		return new UserResponseDTO(user);
+		
+		User user = User.builder()
+				.name(dto.getName())
+				.email(dto.getEmail())
+				.password(passwordEncoder.encode(dto.getPassword()))
+				.build();
+		User savedUser = repo.save(user);
+		return UserResponseDTO.builder()
+				.id(user.getId())
+				.name(user.getName())
+				.email(user.getEmail())
+				.build();
 	}
 	public UserResponseDTO update(Long id, UserRequestDTO dto) {
 		try {
