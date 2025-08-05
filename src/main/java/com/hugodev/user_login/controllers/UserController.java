@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.hugodev.user_login.dto.UserRequestDTO;
 import com.hugodev.user_login.dto.UserResponseDTO;
+import com.hugodev.user_login.dto.UserUpdateDTO;
 import com.hugodev.user_login.services.UserService;
 
 import jakarta.validation.Valid;
@@ -46,11 +47,11 @@ public class UserController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
 		return ResponseEntity.created(uri).body(result);
 	}
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserRequestDTO dto){
-		UserResponseDTO newDto = service.update(id, dto);
-		return ResponseEntity.ok(newDto);
-	}
+	 @PutMapping("/{id}")
+	    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
+	        UserResponseDTO userResponseDTO = service.update(id, dto);
+	        return ResponseEntity.ok(userResponseDTO);
+	    }
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id){
 		service.deleteById(id);

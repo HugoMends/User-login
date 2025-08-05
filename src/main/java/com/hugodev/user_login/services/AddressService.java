@@ -49,7 +49,7 @@ public class AddressService {
 	@Transactional(readOnly = true)
 	public List<AddressResponseDTO> findAddressByUserId(Long id){
 		User user = userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
-		return user.getAddress().stream().map(x -> new AddressResponseDTO(x)).collect(Collectors.toList());
+		return user.getAddresses().stream().map(x -> new AddressResponseDTO(x)).collect(Collectors.toList());
 	//	List<AddressResponseDTO> result = new ArrayList<>();
 	//	for(Address a : user.getAddress()) {
 	//		result.add(new AddressResponseDTO(a));
